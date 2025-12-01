@@ -65,10 +65,14 @@ data "aws_vpc" "default" {
   default = true
 }
 
-# Find a subnet in the default VPC
-data "aws_subnet_ids" "default" {
-  vpc_id = data.aws_vpc.default.id
+# Get all subnets in the default VPC
+data "aws_subnets" "default" {
+  filter {
+    name   = "vpc-id"
+    values = [data.aws_vpc.default.id]
+  }
 }
+
 
 resource "aws_instance" "strapi" {
   ami           = data.aws_ami.ubuntu.id
