@@ -76,16 +76,16 @@ data "aws_subnets" "default" {
 
 resource "aws_instance" "strapi" {
   ami           = data.aws_ami.ubuntu.id
-  instance_type = "t2.micro" # free tier; for heavier usage you may prefer t3.small
+  instance_type = "t2.micro"
 
-  subnet_id              = data.aws_subnet_ids.default.ids[0]
+  subnet_id              = data.aws_subnets.default.ids[0]
   vpc_security_group_ids = [aws_security_group.strapi_sg.id]
 
-  key_name = var.key_name     # You must create this key pair in AWS console first
-
+  key_name  = var.key_name
   user_data = file("${path.module}/userdata.sh")
 
   tags = {
     Name = "strapi-ec2"
   }
 }
+
